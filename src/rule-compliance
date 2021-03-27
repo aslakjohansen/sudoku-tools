@@ -100,11 +100,17 @@ class RCVisualPuzzle (VisualPuzzle):
                 for v in cell:
                     x = border + cellwidth*c + border+(cellheight-2*border)/8*(v-1)
                     y = border + cellheight*r + border+(cellheight-2*border)/8*(v-1)
+                    i = rrows[r][c].intersection(rcols[r][c].intersection(rcells[r][c]))
                     
                     context.save()
                     context.arc(x, y, radius, 0, 2*pi)
                     context.set_line_width(line_width)
-                    context.set_source_rgb(0, 0, 1)
+                    
+                    if len(i)==1 and list(i)[0]==v:
+                        context.set_source_rgb(1, 0, 0)
+                    else:
+                        context.set_source_rgb(0, 0, 1)
+                    context.fill_preserve()
                     context.stroke()
 
 # guard: command line arguments
