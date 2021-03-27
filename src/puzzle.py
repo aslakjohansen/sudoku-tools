@@ -12,6 +12,12 @@ class Puzzle:
                 data.append(ldata)
         self.data = data
     
+    def index (self, x, y):
+        if x<0 or x>8: raise Exception('Illegal x value of %s/%s' %(x, type(x)))
+        if y<0 or y>8: raise Exception('Illegal y value of %s/%s' %(y, type(y)))
+        
+        return self.data[y][x]
+    
     def validate (self):
         data = self.data
         
@@ -20,6 +26,36 @@ class Puzzle:
             if len(row)!=9: return False
             for cell in row:
                 if cell<0 or cell>9: return False
+        
+        # rows
+        for y in range(9):
+            cells = set()
+            for x in range(9):
+                cell = self.index(x, y)
+                if cell==0: continue
+                if cell in cells: return False
+                cells.add(cell)
+        
+        # columns
+        for x in range(9):
+            cells = set()
+            for y in range(9):
+                cell = self.index(x, y)
+                if cell==0: continue
+                if cell in cells: return False
+                cells.add(cell)
+        
+        # groups
+        for a in range(9):
+            cells = set()
+            for b in range(9):
+                i = a*9+b
+                x = i%9
+                y = i//9
+                cell = self.index(x, y)
+                if cell==0: continue
+                if cell in cells: return False
+                cells.add(cell)
         
         return True
         
