@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+
+import cairo
+from sys import argv, exit
+from math import pi
+
+from visual_puzzle import VisualPuzzle
+from style import Style
+
+def initialize_data_structure ():
+    data = []
+    for y in range(9):
+        row = []
+        for x in range(9):
+            row.append(set())
+        data.append(row)
+    return data
+
+class RCVisualPuzzle (VisualPuzzle):
+    
+    def _pre_render (self, style, context):
+        data = self.data
+        line_width = style.compliance_line_width
+        radius     = style.compliance_radius
+        border     = style.border
+        height     = style.height
+        width      = style.width
+        
+        cellheight = (height-2*border)/9
+        cellwidth  = (width-2*border)/9
+        
+        # initialize data structure
+        rrows  = initialize_data_structure()
+        rcols  = initialize_data_structure()
+        rcells = initialize_data_structure()
+        
+        # fill out data structure
+        for v in range(1,10):
+            for major in range(9):
+                found_rows  = False
+                found_cols  = False
+                found_cells = False
+                for minor in range(9):
+                    if data[major][minor]==v: found_rows = True
+                    if data[minor][major]==v: found_cols = True
+                    if data[3*(major//3)+minor//3][3*(major%3)+minor%3]==v: found_cells = True
+                
+                if not found_rows:
+                    for minor in range(9):
+                        if data[major][minor]==0:
+                            rrows[major][minor].add(v)
+                if not found_cols:
+                    for minor in range(9):
+                        if data[minor][major]==0:
+                            rcols[minor][major].add(v)
+                if not found_cells:
+                    for minor in range(9):
+                        if data[3*(major//3)+minor//3][3*(major%3)+minor%3]==0:
+                            rcells[3*(major//3)+minor//3][3*(major%3)+minor%3].add(v)
+        
+        # render data structure: rows
+        for r in range(len(rrows)):
+            row = rrows[r]
+            for c in range(len(row)):
+                cell = row[c]
+                for v in cell:
+                    y = border + cellheight*r + border+(cellheight-2*border)/8*(v-1)
+                    x1 = border + cellwidth*c + border
+                    x2 = border + cellwidth*c + cellwidth - border
+                    
+                    context.save()
+                    context.move_to(x1, y)
+                    context.line_to(x2, y)
+                    context.set_line_width(line_width)
+                    context.set_source_rgb(0, 0, 1)
+                    context.stroke()
+        
+        # render data structure: cols
+        for r in range(len(rcols)):
+            row = rcols[r]
+            for c in range(len(row)):
+                cell = row[c]
+                for v in cell:
+                    x = border + cellwidth*c + border+(cellheight-2*border)/8*(v-1)
+                    y1 = border + cellheight*r + border
+                    y2 = border + cellheight*r + cellheight - border
+                    
+                    context.save()
+                    context.move_to(x, y1)
+                    context.line_to(x, y2)
+                    context.set_line_width(line_width)
+                    context.set_source_rgb(0, 0, 1)
+                    context.stroke()
+        
+        # render data structure: cells
+        for r in range(len(rcells)):
+            row = rcells[r]
+            for c in range(len(row)):
+                cell = row[c]
+                for v in cell:
+                    x = border + cellwidth*c + border+(cellheight-2*border)/8*(v-1)
+                    y = border + cellheight*r + border+(cellheight-2*border)/8*(v-1)
+                    
+                    context.save()
+                    context.arc(x, y, radius, 0, 2*pi)
+                    context.set_line_width(line_width)
+                    context.set_source_rgb(0, 0, 1)
+                    context.stroke()
+
+# guard: command line arguments
+if len(argv) != 3:
+    print('Syntax: %s INPUT_PUZZLE OUTPUT_PDF' % argv[0])
+    print('        %s ../var/samples/example1.txt ../var/samples/example1_rule_compliance.pdf' % argv[0])
+    exit(1)
+input_filename = argv[1]
+output_filename = argv[2]
+
+puzzle = RCVisualPuzzle(input_filename)
+style = Style()
+puzzle.render(output_filename, style)
+

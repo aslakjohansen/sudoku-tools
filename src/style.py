@@ -11,4 +11,6 @@ class Style:
         self.border = mm(1)
         self.grid_major_line_width = mm(0.4)
         self.grid_minor_line_width = mm(0.2)
+        self.compliance_line_width = mm(0.1)
+        self.compliance_radius     = mm(0.3)
 
