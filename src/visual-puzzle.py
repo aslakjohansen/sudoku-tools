@@ -8,6 +8,12 @@ class VisualPuzzle (Puzzle):
     def __init__ (self, filename):
         super().__init__(filename)
     
+    def _pre_render (self, style, context):
+        pass
+    
+    def _post_render (self, style, context):
+        pass
+    
     def render (self, filename, style, context=None):
         width    = style.width
         height   = style.height
@@ -22,6 +28,8 @@ class VisualPuzzle (Puzzle):
                                      cairo.FONT_SLANT_NORMAL,
                                      cairo.FONT_WEIGHT_NORMAL)
             context.set_font_size(textsize)
+        
+        self._pre_render(style, context)
         
         # lines
         for i in range(10):
@@ -65,6 +73,8 @@ class VisualPuzzle (Puzzle):
                 context.move_to(x-(x_bearing+textwidth)/2, y)
                 context.show_text(cell)
                 context.restore()
+        
+        self._post_render(style, context)
 
 if __name__ == "__main__":
     filename = '../var/samples/example1.txt'
