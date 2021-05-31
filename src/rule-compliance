@@ -7,11 +7,11 @@ from math import pi
 from visual_puzzle import VisualPuzzle
 from style import Style
 
-def initialize_data_structure ():
+def initialize_data_structure (size):
     data = []
-    for y in range(9):
+    for y in range(size):
         row = []
-        for x in range(9):
+        for x in range(size):
             row.append(set())
         data.append(row)
     return data
@@ -19,6 +19,7 @@ def initialize_data_structure ():
 class RCVisualPuzzle (VisualPuzzle):
     
     def _pre_render (self, style, context):
+        print('inside')
         data = self.data
         line_width = style.compliance_line_width
         radius     = style.compliance_radius
@@ -26,37 +27,42 @@ class RCVisualPuzzle (VisualPuzzle):
         height     = style.height
         width      = style.width
         
-        cellheight = (height-2*border)/9
-        cellwidth  = (width-2*border)/9
+        cellheight = (height-2*border)/self.size
+        cellwidth  = (width-2*border)/self.size
         
         # initialize data structure
-        rrows  = initialize_data_structure()
-        rcols  = initialize_data_structure()
-        rcells = initialize_data_structure()
+        rrows  = initialize_data_structure(self.size)
+        rcols  = initialize_data_structure(self.size)
+        rcells = initialize_data_structure(self.size)
         
         # fill out data structure
-        for v in range(1,10):
-            for major in range(9):
+        for v in range(1,self.size+1):
+            for major in range(self.size):
                 found_rows  = False
                 found_cols  = False
                 found_cells = False
-                for minor in range(9):
+                print('a v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
+                for minor in range(self.size):
                     if data[major][minor]==v: found_rows = True
                     if data[minor][major]==v: found_cols = True
-                    if data[3*(major//3)+minor//3][3*(major%3)+minor%3]==v: found_cells = True
+                    if data[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base]==v: found_cells = True
+                print('b v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
                 
                 if not found_rows:
-                    for minor in range(9):
-                        if data[major][minor]==0:
+                    for minor in range(self.size):
+                        if data[major][minor]==-1:
                             rrows[major][minor].add(v)
+                print('c v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
                 if not found_cols:
-                    for minor in range(9):
-                        if data[minor][major]==0:
+                    for minor in range(self.size):
+                        if data[minor][major]==-1:
                             rcols[minor][major].add(v)
+                print('d v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
                 if not found_cells:
-                    for minor in range(9):
-                        if data[3*(major//3)+minor//3][3*(major%3)+minor%3]==0:
-                            rcells[3*(major//3)+minor//3][3*(major%3)+minor%3].add(v)
+                    for minor in range(self.size):
+                        if data[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base]==-1:
+                            rcells[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base].add(v)
+                print('e v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
         
         # render data structure: rows
         for r in range(len(rrows)):
@@ -64,7 +70,7 @@ class RCVisualPuzzle (VisualPuzzle):
             for c in range(len(row)):
                 cell = row[c]
                 for v in cell:
-                    y = border + cellheight*r + border+(cellheight-2*border)/8*(v-1)
+                    y = border + cellheight*r + border+(cellheight-2*border)/(self.size-1)*(v-1)
                     x1 = border + cellwidth*c + border
                     x2 = border + cellwidth*c + cellwidth - border
                     
@@ -81,7 +87,7 @@ class RCVisualPuzzle (VisualPuzzle):
             for c in range(len(row)):
                 cell = row[c]
                 for v in cell:
-                    x = border + cellwidth*c + border+(cellheight-2*border)/8*(v-1)
+                    x = border + cellwidth*c + border+(cellheight-2*border)/(self.size-1)*(v-1)
                     y1 = border + cellheight*r + border
                     y2 = border + cellheight*r + cellheight - border
                     
@@ -98,8 +104,8 @@ class RCVisualPuzzle (VisualPuzzle):
             for c in range(len(row)):
                 cell = row[c]
                 for v in cell:
-                    x = border + cellwidth*c + border+(cellheight-2*border)/8*(v-1)
-                    y = border + cellheight*r + border+(cellheight-2*border)/8*(v-1)
+                    x = border + cellwidth*c + border+(cellheight-2*border)/(self.size-1)*(v-1)
+                    y = border + cellheight*r + border+(cellheight-2*border)/(self.size-1)*(v-1)
                     i = rrows[r][c].intersection(rcols[r][c].intersection(rcells[r][c]))
                     
                     context.save()

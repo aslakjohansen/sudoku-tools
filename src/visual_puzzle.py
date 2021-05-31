@@ -32,11 +32,11 @@ class VisualPuzzle (Puzzle):
         self._pre_render(style, context)
         
         # lines
-        for i in range(10):
-            line_width = style.grid_major_line_width if i%3==0 else \
+        for i in range(self.size+1):
+            line_width = style.grid_major_line_width if i%self.base==0 else \
                          style.grid_minor_line_width
-            x = border + (width-2*border)/9*i
-            y = border + (height-2*border)/9*i
+            x = border + (width-2*border)/self.size*i
+            y = border + (height-2*border)/self.size*i
             
             context.save()
             context.move_to(border, y)
@@ -61,11 +61,11 @@ class VisualPuzzle (Puzzle):
         context.stroke()
         
         # cells
-        for i in range(9):
-            for j in range(9):
-                cell = '' if data[i][j]==0 else str(data[i][j])
-                x = border + (width-2*border)/9*(j+0.5)
-                y = border + (height-2*border)/9*(i+0.5)+textsize/3
+        for i in range(self.size):
+            for j in range(self.size):
+                cell = '' if data[i][j]==-1 else str(data[i][j])
+                x = border + (width-2*border)/self.size*(j+0.5)
+                y = border + (height-2*border)/self.size*(i+0.5)+textsize/3
                 
                 context.save()
                 context.set_font_size(textsize)
