@@ -19,7 +19,6 @@ def initialize_data_structure (size):
 class RCVisualPuzzle (VisualPuzzle):
     
     def _pre_render (self, style, context):
-        print('inside')
         data = self.data
         line_width = style.compliance_line_width
         radius     = style.compliance_radius
@@ -41,28 +40,26 @@ class RCVisualPuzzle (VisualPuzzle):
                 found_rows  = False
                 found_cols  = False
                 found_cells = False
-                print('a v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
+                
                 for minor in range(self.size):
                     if data[major][minor]==v: found_rows = True
                     if data[minor][major]==v: found_cols = True
                     if data[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base]==v: found_cells = True
-                print('b v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
                 
                 if not found_rows:
                     for minor in range(self.size):
                         if data[major][minor]==-1:
                             rrows[major][minor].add(v)
-                print('c v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
+                
                 if not found_cols:
                     for minor in range(self.size):
                         if data[minor][major]==-1:
                             rcols[minor][major].add(v)
-                print('d v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
+                
                 if not found_cells:
                     for minor in range(self.size):
                         if data[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base]==-1:
                             rcells[self.base*(major//self.base)+minor//self.base][self.base*(major%self.base)+minor%self.base].add(v)
-                print('e v=%d major=%d found_(rows|cols|cells)=(%r|%r|%r)' % (v, major, found_rows, found_cols, found_cells))
         
         # render data structure: rows
         for r in range(len(rrows)):

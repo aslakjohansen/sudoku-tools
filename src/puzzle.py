@@ -23,7 +23,6 @@ class Puzzle:
             
             ldata = []
             for char in line:
-#                ldata.append(0 if char==' ' else int(char))
                 ldata.append(Puzzle.decode[char.lower()])
             if len(ldata)!=0:
                 data.append(ldata)
