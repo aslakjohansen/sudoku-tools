@@ -1,0 +1,18 @@
+#base 4
+#encoding hex
+7   1 3AB9 G   6
+   2   7C   E   
+  1E  6  8  2G  
+ 6C   9  3   7D 
+5              A
+     C4  7D     
+E 8D 1    B C2 4
+24     53     87
+1E     CG     42
+B 46 9    3 81 E
+     62  E8     
+D              F
+ B2   D  C   3E 
+  E7  C  D  49  
+   G   32   A   
+6   2 B9E1 3   D
