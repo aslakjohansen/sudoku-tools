@@ -13,4 +13,5 @@ class Style:
         self.grid_minor_line_width = mm(0.2)
         self.compliance_line_width = mm(0.1)
         self.compliance_radius     = mm(0.3)
+        self.highlight = (1,0.5,0.5,0.3)
 

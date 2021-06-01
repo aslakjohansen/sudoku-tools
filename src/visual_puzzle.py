@@ -5,14 +5,72 @@ from style import Style
 
 class VisualPuzzle (Puzzle):
 
-    def __init__ (self, filename):
+    def __init__ (self, filename, highlights=None):
         super().__init__(filename)
+        self.highlights = highlights
     
     def _pre_render (self, style, context):
         pass
     
     def _post_render (self, style, context):
         pass
+    
+    def render_highlights (self, style, context):
+        if not self.highlights: return
+        
+        r, g, b, a = style.highlight
+        context.save()
+        context.set_source_rgba(r, g, b, a)
+        
+        if 'rows' in self.highlights:
+            for y in self.highlights['rows']:
+                n = style.border + (style.height-2*style.border)/self.size*y
+                s = style.border + (style.height-2*style.border)/self.size*(y+1)
+                e = style.width - style.border
+                w = style.border
+                context.save()
+                context.move_to(w, n)
+                context.line_to(e, n)
+                context.line_to(e, s)
+                context.line_to(w, s)
+                context.close_path()
+                context.fill()
+                context.restore()
+        
+        if 'columns' in self.highlights:
+            for x in self.highlights['columns']:
+                n = style.border
+                s = style.width - style.border
+                e = style.border + (style.width-2*style.border)/self.size*(x+1)
+                w = style.border + (style.width-2*style.border)/self.size*x
+                context.save()
+                context.move_to(w, n)
+                context.line_to(e, n)
+                context.line_to(e, s)
+                context.line_to(w, s)
+                context.close_path()
+                context.fill()
+                context.restore()
+        
+        if 'groups' in self.highlights:
+            for i in self.highlights['groups']:
+                x = i%self.base
+                y = i//self.base
+                n = style.border + (style.height-2*style.border)/self.size*(y)*self.base
+                s = style.border + (style.height-2*style.border)/self.size*(y+1)*self.base
+                e = style.border + (style.width-2*style.border)/self.size*(x+1)*self.base
+                w = style.border + (style.width-2*style.border)/self.size*(x)*self.base
+                context.save()
+                context.move_to(w, n)
+                context.line_to(e, n)
+                context.line_to(e, s)
+                context.line_to(w, s)
+                context.close_path()
+                context.fill()
+                context.restore()
+        
+        context.restore()
+        
     
     def render (self, filename, style, context=None):
         width    = style.width
@@ -30,6 +88,7 @@ class VisualPuzzle (Puzzle):
             context.set_font_size(textsize)
         
         self._pre_render(style, context)
+        self.render_highlights(style, context)
         
         # lines
         for i in range(self.size+1):
@@ -77,8 +136,24 @@ class VisualPuzzle (Puzzle):
         self._post_render(style, context)
 
 if __name__ == "__main__":
+    style = Style()
+    
     filename = '../var/samples/example1.txt'
     puzzle = VisualPuzzle(filename);
-    style = Style()
     puzzle.render('../var/samples/example1.pdf', style)
+    
+    filename = '../var/samples/example2.txt'
+    
+    puzzle = VisualPuzzle(filename, {'rows':[6]});
+    puzzle.render('../var/samples/example2_row.pdf', style)
+    
+    puzzle = VisualPuzzle(filename, {'columns':[10]});
+    puzzle.render('../var/samples/example2_column.pdf', style)
+    
+    puzzle = VisualPuzzle(filename, {'groups':[6]});
+    puzzle.render('../var/samples/example2_group.pdf', style)
+    
+    puzzle = VisualPuzzle(filename, {'rows':[6], 'columns':[10], 'groups':[6]});
+    puzzle.render('../var/samples/example2_all.pdf', style)
+    
 
