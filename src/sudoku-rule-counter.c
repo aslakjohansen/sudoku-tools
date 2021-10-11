@@ -38,11 +38,21 @@ static inline bool check_validity (world_t world, int y, int x, int value) {
   int x0 = (x/PROBLEM_SIZE)*PROBLEM_SIZE;
   
   for (int i=0 ; i<WORLD_LENGTH ; i++) {
+#ifdef ENABLE_ROW_RULE
       if (world[y][i]==value) return false;
+#endif
+#ifdef ENABLE_COLUMN_RULE
       if (world[i][x]==value) return false;
+#endif
+#ifdef ENABLE_BOX_RULE
       if (world[y0+i/PROBLEM_SIZE][x0+i%PROBLEM_SIZE]==value) return false;
-/*      if (world[(y+i)%WORLD_LENGTH][(x+i)%WORLD_LENGTH]==value) return false;*/
-/*      if (world[(WORLD_LENGTH+y-i)%WORLD_LENGTH][(x+i)%WORLD_LENGTH]==value) return false;*/
+#endif
+#ifdef ENABLE_RISE_RULE
+      if (world[(y+i)%WORLD_LENGTH][(x+i)%WORLD_LENGTH]==value) return false;
+#endif
+#ifdef ENABLE_FALL_RULE
+      if (world[(WORLD_LENGTH+y-i)%WORLD_LENGTH][(x+i)%WORLD_LENGTH]==value) return false;
+#endif
   }
   
   return true;
