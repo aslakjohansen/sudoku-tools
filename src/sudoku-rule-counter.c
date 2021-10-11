@@ -54,11 +54,13 @@ void cover_rec (world_t world, int index)
     printf("New solution #%d:\n", valid_count++);
     print_world(world);
   } else {
+#ifdef DEBUG_DEPTH 
     if (index>max_depth) {
       max_depth = index;
       printf("New maxdepth is %d\n", max_depth);
       print_world(world);
     }
+#endif
     
     int y = index / WORLD_LENGTH;
     int x = index % WORLD_LENGTH;
