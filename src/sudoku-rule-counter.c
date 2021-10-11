@@ -5,7 +5,7 @@
 #define WORLD_SIZE (WORLD_LENGTH*WORLD_LENGTH)
 
 int valid_count = 0;
-int max_depth = 0;
+int max_depth   = 0;
 
 typedef int world_t[WORLD_LENGTH][WORLD_LENGTH];
 
