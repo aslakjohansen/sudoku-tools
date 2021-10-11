@@ -9,19 +9,28 @@ int max_depth   = 0;
 
 typedef int world_t[WORLD_LENGTH][WORLD_LENGTH];
 
+static inline void print_world_line (world_t world, int line) {
+  for (int i=0 ; i<WORLD_LENGTH ; i++)
+    printf("%s%s%s",
+           (line%PROBLEM_SIZE==0?(i%PROBLEM_SIZE==0?"+":"-"):(i%PROBLEM_SIZE==0?"|":" ")),
+           (line%PROBLEM_SIZE==0?"-":" "),
+           (i==WORLD_LENGTH-1?(line%PROBLEM_SIZE==0?"+\n":"|\n"):""));
+}
+
 void print_world (world_t world)
 {
   for (int line=0 ; line<WORLD_LENGTH ; line++) {
-    for (int i=0 ; i<WORLD_LENGTH ; i++) printf("+-%s", (i==WORLD_LENGTH-1?"+\n":""));
+    print_world_line(world, line);
     
     for (int i=0 ; i<WORLD_LENGTH ; i++) {    
-      printf("|%c%s",
+      printf("%c%c%s",
+             (i%PROBLEM_SIZE==0?'|':' '),
              (world[line][i]==0?' ':'0'+world[line][i]),
              (i==WORLD_LENGTH-1?"|\n":""));
     }
   }
   
-  for (int i=0 ; i<WORLD_LENGTH ; i++) printf("+-%s", (i==WORLD_LENGTH-1?"+\n":""));
+  print_world_line(world, WORLD_LENGTH);
 }
 
 void init_world (world_t world)
