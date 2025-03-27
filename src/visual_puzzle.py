@@ -144,6 +144,9 @@ if __name__ == "__main__":
     
     filename = '../var/samples/example2.txt'
     
+    puzzle = VisualPuzzle(filename);
+    puzzle.render('../var/samples/example2.pdf', style)
+    
     puzzle = VisualPuzzle(filename, {'rows':[6]});
     puzzle.render('../var/samples/example2_row.pdf', style)
     
