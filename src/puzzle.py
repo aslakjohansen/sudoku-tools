@@ -6,7 +6,7 @@ class Puzzle:
         'd': 13, 'e': 14, 'f': 15, '0': 0,
         'g': 16, ' ': -1,
     }
-
+    
     def __init__ (self, filename):
         self.base = 3
         self.encoding = '1byte'
