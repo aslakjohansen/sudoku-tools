@@ -5,8 +5,8 @@ from style import Style
 
 class VisualPuzzle (Puzzle):
 
-    def __init__ (self, filename, highlights=None):
-        super().__init__(filename)
+    def __init__ (self, filename, highlights=None, decoder=None):
+        super().__init__(filename, decoder)
         self.highlights = highlights
     
     def _pre_render (self, style, context):
@@ -146,6 +146,9 @@ if __name__ == "__main__":
     
     puzzle = VisualPuzzle(filename);
     puzzle.render('../var/samples/example2.pdf', style)
+    
+    puzzle = VisualPuzzle(filename, decoder=Puzzle.decode_hex);
+    puzzle.render('../var/samples/example2hex.pdf', style)
     
     puzzle = VisualPuzzle(filename, {'rows':[6]});
     puzzle.render('../var/samples/example2_row.pdf', style)

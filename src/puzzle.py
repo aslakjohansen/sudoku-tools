@@ -1,15 +1,25 @@
 class Puzzle:
-    decode = {
+    decode_numeric = {
         '1': 1, '2': 2, '3': 3, '4': 4, 
         '5': 5, '6': 6, '7': 7, '8': 8,
         '9': 9, 'a': 10, 'b': 11, 'c': 12,
         'd': 13, 'e': 14, 'f': 15, '0': 0,
         'g': 16, ' ': -1,
     }
+    decode_hex = {
+        '1': 1, '2': 2, '3': 3, '4': 4, 
+        '5': 5, '6': 6, '7': 7, '8': 8,
+        '9': 9, 'a': 'A', 'b': 'B', 'c': 'C',
+        'd': 'D', 'e': 'E', 'f': 'F', '0': 0,
+        'g': 'G', ' ': -1,
+    }
     
-    def __init__ (self, filename):
+    def __init__ (self, filename, decoder=None):
         self.base = 3
         self.encoding = '1byte'
+        
+        if decoder==None:
+          decoder = self.decode_numeric
         
         with open(filename) as fo:
             lines = fo.readlines()
@@ -23,7 +33,7 @@ class Puzzle:
             
             ldata = []
             for char in line:
-                ldata.append(Puzzle.decode[char.lower()])
+                ldata.append(decoder[char.lower()])
             if len(ldata)!=0:
                 data.append(ldata)
         self.data = data
