@@ -129,7 +129,7 @@ class VisualPuzzle (Puzzle):
                 context.save()
                 context.set_font_size(textsize)
                 x_bearing, y_bearing, textwidth, textheight = context.text_extents(cell)[:4]
-                context.move_to(x-(x_bearing+textwidth)/2, y)
+                context.move_to(x-x_bearing-textwidth/2, y)
                 context.show_text(cell)
                 context.restore()
         
